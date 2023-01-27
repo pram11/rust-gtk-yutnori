@@ -1,0 +1,1 @@
+nmap('n',<C-S-b>,':! cargo run')
