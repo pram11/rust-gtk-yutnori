@@ -20,6 +20,11 @@ pub const USER_COUNT:usize = 4;
 pub const PIECE_PER_USER:usize = 4;
 pub const BOARD_WIDTH:usize = 5;
 pub const BOARD_HEIGHT:usize = 5;
+pub const BOARD_IMAGE_WIDTH:usize = 300;
+pub const BOARD_IMAGE_HEIGHT:usize = 300;
+pub const BOARD_SPACE_WIDTH:usize = 30;
+pub const BOARD_SPACE_HEIGHT:usize = 30;
+pub const BOARD_LINE_WIDTH:usize = 2;
 
 fn main(){
 
@@ -30,7 +35,7 @@ fn main(){
         let user = User::new(("Player ".to_owned()+user.to_string().as_str()).as_str());
         userList.push_back(user); 
     }
-
+    game_board.generate_space();
     
 
 
