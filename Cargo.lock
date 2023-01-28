@@ -900,6 +900,7 @@ dependencies = [
 name = "rust-gtk-yutnori"
 version = "0.1.0"
 dependencies = [
+ "cairo-rs",
  "gtk4",
  "image",
 ]

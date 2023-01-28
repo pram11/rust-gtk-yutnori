@@ -4,8 +4,10 @@ use crate::BOARD_IMAGE_WIDTH;
 use crate::BOARD_IMAGE_HEIGHT;
 use crate::BOARD_SPACE_WIDTH;
 use crate::BOARD_SPACE_HEIGHT;
-use image::{ImageBuffer,RgbImage};
-
+use gtk::cairo::Format;
+use gtk::cairo::ImageSurface;
+use image::{ImageBuffer,RgbImage,Rgb};
+use gtk::builders::ImageBuilder;
 pub type Board = [[i32;BOARD_WIDTH];BOARD_HEIGHT];
 pub struct GameBoard{
     pub board:Board
@@ -29,8 +31,8 @@ impl GameBoard{
             panic!("cannot create board");
         }else {
             let mut board_array = [[0; BOARD_WIDTH ];BOARD_HEIGHT ];
-            
-           for rowidx in 0..board_array.len(){
+                
+            for rowidx in 0..board_array.len(){
                 if (rowidx ==0) || (rowidx==BOARD_HEIGHT-1){
                     board_array[rowidx] = [1;BOARD_HEIGHT];
                 }else{
@@ -88,7 +90,11 @@ impl GameBoard{
     }
 
     pub fn generate_space(&self){
-        let mut image_buffer:RgbImage = RgbImage::new(BOARD_IMAGE_WIDTH as u32 ,BOARD_IMAGE_HEIGHT as u32);
+        // for test usage
+        let surface = ImageSurface::create(Format::ARgb32,BOARD_IMAGE_WIDTH as i32, BOARD_IMAGE_HEIGHT as i32)
+            .expect("create surface failure");
+
+        
         println!("generate space");
         let coordinate_array = self.calculate_space_center_coordinate();
         for idx in 0..coordinate_array.len(){
@@ -96,6 +102,7 @@ impl GameBoard{
                 println!();
                 for hidx in 0..coordinate_array[idx][widx].len(){
                     print!("{0}-{1} ",coordinate_array[0][widx][hidx],coordinate_array[1][widx][hidx]);
+                   
                 }
             }
         }
