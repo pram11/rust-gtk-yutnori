@@ -4,7 +4,12 @@ use gtk::{prelude::*, DrawingArea};
 use gtk::{Application,ApplicationWindow};
 use gtk::Button;
 use gtk::cairo::{Context};
-use json;
+
+mod user;
+mod board;
+use crate::board::Board;
+use crate::board::GameBoard;
+use crate::user::User;
 const APP_ID:&str = "org.gtk.hello_world1";
 const INITIAL_WINDOW_WIDTH:i32 = 720;
 const INITIAL_WINDOW_HEIGHT:i32 = 480;
@@ -12,21 +17,36 @@ const INITIAL_WINDOW_TITLE:&str = "Hello, world!";
 const DEFAULT_BUTTON_WIDTH:i32 = 120;
 const DEFAULT_BUTTON_HEIGHT:i32 = 40;
 const PI:f64 = 3.1415924771;
-const BOARD_IMAGE_WIDTH:u32 = 600;
-const BOARD_IMAGE_HEIGHT:u32 = 600;
+pub const USER_COUNT:usize = 4;
+pub const PIECE_PER_USER:usize = 4;
+pub const BOARD_WIDTH:usize = 5;
+pub const BOARD_HEIGHT:usize = 5;
+pub const BOARD_IMAGE_WIDTH:usize = 300;
+pub const BOARD_IMAGE_HEIGHT:usize = 300;
+pub const BOARD_SPACE_WIDTH:usize = 30;
+pub const BOARD_SPACE_HEIGHT:usize = 30;
+pub const BOARD_LINE_WIDTH:usize = 2;
+
 fn main(){
-    // test config file from /res/config.json
-    let file = include_bytes!("../res/config.json");
-    let file_string = String::from_utf8_lossy(file).to_string();
-    let parsed = json::parse(&*file_string).unwrap();
-    assert!(!&parsed["board"]["width"].is_null());
-    let board_width = &parsed["board"]["width"];
-    let board_height = &parsed["board"]["height"];
-    println!(" {},{}",parsed["board"]["width"],board_height);
+
     // INITIALIZE
+    let game_board:GameBoard = GameBoard::new();
+   let mut userList:LinkedList<User> = LinkedList::new();
+    for user in 0..USER_COUNT {
+        let user = User::new(("Player ".to_owned()+user.to_string().as_str()).as_str());
+        userList.push_back(user); 
+    }
+    game_board.generate_space();
+    
+    
+
+
+    println!("Hello, world!");
+    println!("{}",game_board.board.len()); 
+
     let app = Application::builder().application_id(APP_ID).build();
     app.connect_activate(build_ui);
-    // app.run();
+    app.run();
 
 }
 
@@ -51,7 +71,9 @@ fn build_drawing_area()->DrawingArea{
         .margin_start(16)
         .margin_end(16)
         .build();
-   
+    let game_board = GameBoard::new();
+    
+    drawing_area.set_draw_func(game_board.render());
     drawing_area
 
 }
