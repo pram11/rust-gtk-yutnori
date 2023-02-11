@@ -5,6 +5,9 @@ use gtk::{Application,ApplicationWindow};
 use gtk::Button;
 use gtk::cairo::{Context};
 use json;
+
+mod board;
+use crate::board::Board;
 const APP_ID:&str = "org.gtk.hello_world1";
 const INITIAL_WINDOW_WIDTH:i32 = 720;
 const INITIAL_WINDOW_HEIGHT:i32 = 480;
@@ -19,10 +22,7 @@ fn main(){
     let file = include_bytes!("../res/config.json");
     let file_string = String::from_utf8_lossy(file).to_string();
     let parsed = json::parse(&*file_string).unwrap();
-    assert!(!&parsed["board"]["width"].is_null());
-    let board_width = &parsed["board"]["width"];
-    let board_height = &parsed["board"]["height"];
-    println!(" {},{}",parsed["board"]["width"],board_height);
+    Board::from_json_string(parsed.to_string());
     // INITIALIZE
     let app = Application::builder().application_id(APP_ID).build();
     app.connect_activate(build_ui);
